@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { MessageCircle, ChevronDown, ArrowRight } from 'lucide-react';
 
 const locationOptions = [
-  'CDG Airport (Paris)',
+  'CDG Airport',
   'Orly Airport',
   'BVA Airport (Beauvais)',
   'Paris city centre',
@@ -12,10 +12,22 @@ const locationOptions = [
   'Other (specify in message)',
 ];
 
-const vehicleOptions = [
-  { id: 'tesla', label: '⚡ Tesla Model 3/Y', capacity: 'Up to 4 pax · vegan leather', price: '€80' },
-  { id: 'van', label: '🚐 Mercedes Vito', capacity: 'Up to 8 passengers', price: '€120' },
-];
+// Prix fixes selon l'origine/destination par rapport à Disneyland Paris
+const ROUTE_PRICES: Record<string, { tesla: number; van: number }> = {
+  'CDG Airport':          { tesla: 80,  van: 120 },
+  'Orly Airport':         { tesla: 90,  van: 130 },
+  'BVA Airport (Beauvais)': { tesla: 200, van: 255 },
+  'Paris city centre':    { tesla: 90,  van: 130 },
+};
+
+function getRoutePrice(pickup: string, dropoff: string) {
+  // L'un des deux doit être Disneyland Paris pour avoir un prix fixe
+  const nonDisney = pickup === 'Disneyland Paris' ? dropoff
+    : dropoff === 'Disneyland Paris' ? pickup
+    : null;
+  if (!nonDisney) return null;
+  return ROUTE_PRICES[nonDisney] ?? null;
+}
 
 function Select({ name, value, onChange, options }: {
   name: string; value: string;
@@ -33,10 +45,10 @@ function Select({ name, value, onChange, options }: {
 }
 
 export default function BookingForm() {
-  const [vehicle, setVehicle] = useState('tesla');
+  const [vehicle, setVehicle] = useState<'tesla' | 'van'>('tesla');
   const [form, setForm] = useState({
     name: '',
-    pickup: 'CDG Airport (Paris)',
+    pickup: 'CDG Airport',
     dropoff: 'Disneyland Paris',
     date: '',
     time: '',
@@ -47,15 +59,38 @@ export default function BookingForm() {
     notes: '',
   });
 
+  const totalPax = parseInt(form.passengers) + parseInt(form.children);
+
+  // Si total > 4, Tesla indisponible ; si total = 8, Vito obligatoire
+  const teslaDisabled = totalPax > 4;
+  const requiresVito = totalPax >= 8;
+
+  // Auto-switch Tesla → Van si passagers > 4
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const updated = { ...form, [e.target.name]: e.target.value };
+    setForm(updated);
+    const newTotal = parseInt(e.target.name === 'passengers' ? e.target.value : form.passengers)
+                   + parseInt(e.target.name === 'children' ? e.target.value : form.children);
+    if (newTotal > 4 && vehicle === 'tesla') setVehicle('van');
   }
+
+  const routePrice = useMemo(() => getRoutePrice(form.pickup, form.dropoff), [form.pickup, form.dropoff]);
+
+  const displayPrice = routePrice
+    ? (vehicle === 'tesla' ? `€${routePrice.tesla}` : `€${routePrice.van}`)
+    : null;
+
+  const vanLabel = requiresVito ? '🚐 Mercedes Vito' : '🚐 Mercedes V-Class / Vito';
+  const vanCapacity = requiresVito ? 'Up to 8 passengers (Vito required)' : 'Up to 8 passengers';
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const v = vehicleOptions.find((x) => x.id === vehicle);
-    const vehicleFull = vehicle === 'tesla' ? 'Tesla Model 3/Y (up to 4 pax — 2 large + 2 cabin bags)' : 'Mercedes Vito (up to 8 pax — 6 large suitcases)';
     const hasChildren = parseInt(form.children) > 0;
+    const vehicleStr = vehicle === 'tesla'
+      ? 'Tesla Model 3/Y (up to 4 pax — 2 large + 2 cabin bags · vegan leather)'
+      : requiresVito
+        ? 'Mercedes Vito (8 pax — 6 large suitcases)'
+        : 'Mercedes V-Class or Vito (up to 8 pax — 6 large suitcases)';
 
     const lines = [
       `🚗 *New Booking Request — Obrigado Transports*`,
@@ -68,7 +103,8 @@ export default function BookingForm() {
       form.flight ? `✈️ *Flight:* ${form.flight}` : '',
       `👥 *Passengers:* ${form.passengers} adult(s)${hasChildren ? ` + ${form.children} child(ren)` : ''}`,
       hasChildren && form.childAges ? `🧒 *Children's ages:* ${form.childAges}` : '',
-      `🚐 *Vehicle:* ${vehicleFull}`,
+      `🚐 *Vehicle:* ${vehicleStr}`,
+      displayPrice ? `💶 *Quoted price:* ${displayPrice} (fixed, one way)` : `💶 *Price:* To be confirmed (route outside standard grid)`,
       form.notes ? `📝 *Notes:* ${form.notes}` : '',
       ``,
       `Please confirm availability and send the Stripe payment link. Thank you!`,
@@ -81,24 +117,44 @@ export default function BookingForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Vehicle selector */}
       <div className="grid grid-cols-2 gap-3">
-        {vehicleOptions.map((v) => (
-          <button
-            key={v.id}
-            type="button"
-            onClick={() => setVehicle(v.id)}
-            className={`text-left p-3 rounded-xl border transition-all ${
-              vehicle === v.id
+        {/* Tesla */}
+        <button
+          type="button"
+          onClick={() => !teslaDisabled && setVehicle('tesla')}
+          disabled={teslaDisabled}
+          className={`text-left p-3 rounded-xl border transition-all ${
+            teslaDisabled
+              ? 'border-[#263044] bg-[#0D1120] text-gray-600 cursor-not-allowed opacity-50'
+              : vehicle === 'tesla'
                 ? 'border-gold bg-gold/10 text-white'
                 : 'border-[#263044] bg-[#111827] text-gray-400 hover:border-gold/40'
-            }`}
-          >
-            <div className="text-xs font-semibold leading-tight mb-1">{v.label}</div>
-            <div className="text-[10px] text-gray-500">{v.capacity}</div>
-            <div className={`text-sm font-bold mt-1 ${vehicle === v.id ? 'text-gold' : 'text-gray-500'}`}>
-              From {v.price}
-            </div>
-          </button>
-        ))}
+          }`}
+        >
+          <div className="text-xs font-semibold leading-tight mb-1">⚡ Tesla Model 3/Y</div>
+          <div className="text-[10px] text-gray-500">
+            {teslaDisabled ? 'Not available (max 4 pax)' : 'Up to 4 pax · vegan leather'}
+          </div>
+          <div className={`text-sm font-bold mt-1 ${vehicle === 'tesla' && !teslaDisabled ? 'text-gold' : 'text-gray-500'}`}>
+            {routePrice ? `From €${routePrice.tesla}` : 'Price on request'}
+          </div>
+        </button>
+
+        {/* Van */}
+        <button
+          type="button"
+          onClick={() => setVehicle('van')}
+          className={`text-left p-3 rounded-xl border transition-all ${
+            vehicle === 'van'
+              ? 'border-gold bg-gold/10 text-white'
+              : 'border-[#263044] bg-[#111827] text-gray-400 hover:border-gold/40'
+          }`}
+        >
+          <div className="text-xs font-semibold leading-tight mb-1">{vanLabel}</div>
+          <div className="text-[10px] text-gray-500">{vanCapacity}</div>
+          <div className={`text-sm font-bold mt-1 ${vehicle === 'van' ? 'text-gold' : 'text-gray-500'}`}>
+            {routePrice ? `From €${routePrice.van}` : 'Price on request'}
+          </div>
+        </button>
       </div>
 
       {/* Name */}
@@ -148,7 +204,7 @@ export default function BookingForm() {
         </div>
         <div>
           <label className="block text-gray-400 text-xs mb-1">Adults *</label>
-          <Select name="passengers" value={form.passengers} onChange={handleChange} options={['1','2','3','4','5','6','7']} />
+          <Select name="passengers" value={form.passengers} onChange={handleChange} options={['1','2','3','4','5','6','7','8']} />
         </div>
         <div>
           <label className="block text-gray-400 text-xs mb-1">Children 🧒</label>
@@ -179,8 +235,14 @@ export default function BookingForm() {
       <div className="bg-gold/10 border border-gold/30 rounded-xl px-4 py-3 flex items-center justify-between">
         <div>
           <span className="text-gray-400 text-xs block">Fixed price (one way)</span>
-          <span className="text-gold font-bold text-lg">{vehicle === 'tesla' ? '€80' : '€120'}</span>
-          <span className="text-gray-600 text-xs ml-2">CDG → Disney</span>
+          {displayPrice ? (
+            <span className="text-gold font-bold text-lg">{displayPrice}</span>
+          ) : (
+            <span className="text-gray-400 font-semibold text-sm">Price on request</span>
+          )}
+          <span className="text-gray-600 text-xs ml-2">
+            {form.pickup} → {form.dropoff === 'Disneyland Paris' ? 'Disney' : form.dropoff}
+          </span>
         </div>
         <div className="text-right">
           <span className="text-gray-500 text-xs block">Always included</span>
@@ -190,7 +252,7 @@ export default function BookingForm() {
 
       <button type="submit" className="btn-whatsapp w-full py-4 text-base font-bold">
         <MessageCircle size={20} />
-        Check Price &amp; Book via WhatsApp
+        {displayPrice ? `Book via WhatsApp — ${displayPrice}` : 'Get a Quote via WhatsApp'}
       </button>
 
       <p className="text-gray-600 text-xs text-center">
