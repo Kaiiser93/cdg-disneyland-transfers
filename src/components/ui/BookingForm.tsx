@@ -12,21 +12,21 @@ const locationOptions = [
   'Other (specify in message)',
 ];
 
-// Prix fixes selon l'origine/destination par rapport à Disneyland Paris
-const ROUTE_PRICES: Record<string, { tesla: number; van: number }> = {
-  'CDG Airport':          { tesla: 80,  van: 120 },
-  'Orly Airport':         { tesla: 90,  van: 130 },
-  'BVA Airport (Beauvais)': { tesla: 200, van: 255 },
-  'Paris city centre':    { tesla: 90,  van: 130 },
+// Table complète des prix — clé = les deux lieux triés et joints par "/"
+const PAIR_PRICES: Record<string, { tesla: number; van: number }> = {
+  'BVA Airport (Beauvais)/Disneyland Paris': { tesla: 200, van: 255 },
+  'BVA Airport (Beauvais)/Paris city centre': { tesla: 160, van: 210 },
+  'CDG Airport/Disneyland Paris':            { tesla: 80,  van: 120 },
+  'CDG Airport/Orly Airport':                { tesla: 100, van: 140 },
+  'CDG Airport/Paris city centre':           { tesla: 80,  van: 120 },
+  'Disneyland Paris/Orly Airport':           { tesla: 90,  van: 130 },
+  'Disneyland Paris/Paris city centre':      { tesla: 90,  van: 130 },
+  'Orly Airport/Paris city centre':          { tesla: 70,  van: 110 },
 };
 
 function getRoutePrice(pickup: string, dropoff: string) {
-  // L'un des deux doit être Disneyland Paris pour avoir un prix fixe
-  const nonDisney = pickup === 'Disneyland Paris' ? dropoff
-    : dropoff === 'Disneyland Paris' ? pickup
-    : null;
-  if (!nonDisney) return null;
-  return ROUTE_PRICES[nonDisney] ?? null;
+  const key = [pickup, dropoff].sort().join('/');
+  return PAIR_PRICES[key] ?? null;
 }
 
 function Select({ name, value, onChange, options }: {
