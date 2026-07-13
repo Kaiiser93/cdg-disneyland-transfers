@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { CheckCircle, Star, Shield, Clock, Baby, MapPin } from 'lucide-react';
 import BookingForm from '@/components/ui/BookingForm';
+import CastleIllustration from '@/components/ui/CastleIllustration';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -68,6 +69,31 @@ export default function HomePage() {
         {/* Background glow */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-blue-900/20 blur-[100px] pointer-events-none" />
+
+        {/* Castle silhouette — decorative background */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[720px] pointer-events-none opacity-[0.08] hidden lg:block">
+          <CastleIllustration />
+        </div>
+
+        {/* Twinkling stars */}
+        {[
+          { top: '12%', left: '8%', delay: '0s', size: 3 },
+          { top: '25%', left: '3%', delay: '1.2s', size: 2 },
+          { top: '8%', right: '5%', delay: '0.6s', size: 3 },
+          { top: '18%', right: '12%', delay: '2s', size: 2 },
+          { top: '40%', left: '5%', delay: '0.9s', size: 2 },
+          { top: '55%', right: '4%', delay: '1.8s', size: 3 },
+        ].map((s, i) => (
+          <div
+            key={i}
+            className="absolute pointer-events-none animate-twinkle"
+            style={{ top: s.top, left: s.left as string | undefined, right: s.right as string | undefined, animationDelay: s.delay }}
+          >
+            <svg width={s.size * 6} height={s.size * 6} viewBox="0 0 24 24" fill="#C9A96E">
+              <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
+            </svg>
+          </div>
+        ))}
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -188,6 +214,37 @@ export default function HomePage() {
                 <div className="flex justify-center mb-4">{b.icon}</div>
                 <h3 className="text-white font-bold mb-2">{b.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{b.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* MAGICAL DESTINATION */}
+      <section className="py-16 bg-[#090D18] overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/3 to-transparent pointer-events-none" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative">
+          <p className="text-gold text-xs tracking-widest uppercase font-semibold mb-3 animate-twinkle-slow inline-block">
+            ✦ Your magical destination ✦
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+            Just 35 km from CDG Airport
+          </h2>
+          <p className="text-gray-400 text-sm mb-8 max-w-lg mx-auto">
+            Skip the RER B, the bus connections and the stress. Your private car goes directly from the arrivals hall to the gates of Disneyland Paris.
+          </p>
+          <div className="animate-float max-w-lg mx-auto">
+            <CastleIllustration className="w-full" />
+          </div>
+          <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm">
+            {[
+              { icon: '⏱', label: '~40 min door-to-door' },
+              { icon: '🚗', label: 'Direct — no stops' },
+              { icon: '✅', label: 'Confirmed & fixed price' },
+            ].map((b) => (
+              <div key={b.label} className="flex items-center gap-2 text-gray-300">
+                <span>{b.icon}</span>
+                <span>{b.label}</span>
               </div>
             ))}
           </div>

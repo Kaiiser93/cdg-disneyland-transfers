@@ -73,6 +73,29 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Sister site */}
+        <div className="border-t border-[#1E2A3D] pt-6 pb-4">
+          <p className="text-gray-600 text-xs uppercase tracking-widest mb-3 font-medium">Also by Obrigado Transports</p>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://transfert-aeroports-paris.fr/fr/disney"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-gold transition-colors text-xs border border-[#263044] hover:border-gold/40 rounded-full px-3 py-1"
+            >
+              Version française — transfert-aeroports-paris.fr ↗
+            </a>
+            <a
+              href="https://www.vtc-seine-saint-denis.fr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-gold transition-colors text-xs border border-[#263044] hover:border-gold/40 rounded-full px-3 py-1"
+            >
+              VTC Seine-Saint-Denis ↗
+            </a>
+          </div>
+        </div>
+
         {/* Bottom bar */}
         <div className="border-t border-[#1E2A3D] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-gray-600 text-xs text-center sm:text-left">

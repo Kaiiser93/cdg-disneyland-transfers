@@ -1,29 +1,43 @@
 'use client';
 
 import { useState } from 'react';
-import { MessageCircle, ChevronDown } from 'lucide-react';
+import { MessageCircle, ChevronDown, ArrowRight } from 'lucide-react';
 
-const pickupOptions = [
-  'CDG Terminal 1',
-  'CDG Terminal 2E',
-  'CDG Terminal 2F',
-  'CDG Terminal 2G',
-  'CDG Terminal 3',
+const locationOptions = [
+  'CDG Airport (Paris)',
   'Orly Airport',
+  'BVA Airport (Beauvais)',
   'Paris city centre',
+  'Disneyland Paris',
   'Other (specify in message)',
 ];
 
 const vehicleOptions = [
-  { id: 'tesla', label: '⚡ Tesla Model 3/Y — Executive Eco', capacity: 'Up to 4 passengers', price: '€80' },
-  { id: 'van', label: '🚐 Mercedes V-Class — Premium Van', capacity: 'Up to 7 passengers', price: '€120' },
+  { id: 'tesla', label: '⚡ Tesla Model 3/Y', capacity: 'Up to 4 passengers', price: '€80' },
+  { id: 'van', label: '🚐 Mercedes V-Class', capacity: 'Up to 7 passengers', price: '€120' },
 ];
+
+function Select({ name, value, onChange, options }: {
+  name: string; value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: string[];
+}) {
+  return (
+    <div className="relative">
+      <select name={name} value={value} onChange={onChange} className="input-dark appearance-none pr-8" required>
+        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+      </select>
+      <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+    </div>
+  );
+}
 
 export default function BookingForm() {
   const [vehicle, setVehicle] = useState('tesla');
   const [form, setForm] = useState({
     name: '',
-    pickup: 'CDG Terminal 2E',
+    pickup: 'CDG Airport (Paris)',
+    dropoff: 'Disneyland Paris',
     date: '',
     time: '',
     flight: '',
@@ -39,33 +53,28 @@ export default function BookingForm() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
-    const selectedVehicle = vehicleOptions.find((v) => v.id === vehicle);
+    const v = vehicleOptions.find((x) => x.id === vehicle);
     const hasChildren = parseInt(form.children) > 0;
 
-    const message = [
-      `🚗 *New Booking Request — CDG to Disneyland Paris*`,
+    const lines = [
+      `🚗 *New Booking Request — Obrigado Transports*`,
       ``,
       `👤 *Name:* ${form.name}`,
-      `📍 *Pickup:* ${form.pickup} → Disneyland Paris`,
+      `📍 *From:* ${form.pickup}`,
+      `🏰 *To:* ${form.dropoff}`,
       `📅 *Date:* ${form.date}`,
-      `🕐 *Arrival time:* ${form.time}`,
-      form.flight ? `✈️ *Flight number:* ${form.flight}` : '',
+      `🕐 *Time:* ${form.time}`,
+      form.flight ? `✈️ *Flight:* ${form.flight}` : '',
       `👥 *Passengers:* ${form.passengers} adult(s)${hasChildren ? ` + ${form.children} child(ren)` : ''}`,
       hasChildren && form.childAges ? `🧒 *Children's ages:* ${form.childAges}` : '',
-      `🚐 *Vehicle:* ${selectedVehicle?.label}`,
+      `🚐 *Vehicle:* ${v?.label}`,
       form.notes ? `📝 *Notes:* ${form.notes}` : '',
       ``,
-      `Please confirm availability and send me a payment link. Thank you!`,
-    ]
-      .filter(Boolean)
-      .join('\n');
+      `Please confirm availability and send the Stripe payment link. Thank you!`,
+    ].filter(Boolean).join('\n');
 
-    const url = `https://wa.me/33189706414?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/33189706414?text=${encodeURIComponent(lines)}`, '_blank');
   }
-
-  const selectedPrice = vehicle === 'tesla' ? '€80' : '€120';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,7 +91,7 @@ export default function BookingForm() {
                 : 'border-[#263044] bg-[#111827] text-gray-400 hover:border-gold/40'
             }`}
           >
-            <div className="text-xs font-semibold leading-tight mb-1">{v.label.split('—')[0].trim()}</div>
+            <div className="text-xs font-semibold leading-tight mb-1">{v.label}</div>
             <div className="text-[10px] text-gray-500">{v.capacity}</div>
             <div className={`text-sm font-bold mt-1 ${vehicle === v.id ? 'text-gold' : 'text-gray-500'}`}>
               From {v.price}
@@ -91,124 +100,77 @@ export default function BookingForm() {
         ))}
       </div>
 
-      {/* Name + Pickup */}
-      <div className="grid sm:grid-cols-2 gap-3">
+      {/* Name */}
+      <div>
+        <label className="block text-gray-400 text-xs mb-1">Your name *</label>
+        <input
+          name="name" required value={form.name} onChange={handleChange}
+          className="input-dark" placeholder="e.g. Sarah Johnson"
+        />
+      </div>
+
+      {/* Pickup → Drop-off */}
+      <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-2">
         <div>
-          <label className="block text-gray-400 text-xs mb-1">Your name *</label>
-          <input
-            name="name"
-            required
-            value={form.name}
-            onChange={handleChange}
-            className="input-dark"
-            placeholder="e.g. Sarah Johnson"
-          />
+          <label className="block text-gray-400 text-xs mb-1">Pick-up *</label>
+          <Select name="pickup" value={form.pickup} onChange={handleChange} options={locationOptions} />
+        </div>
+        <div className="pb-3">
+          <ArrowRight size={16} className="text-gold" />
         </div>
         <div>
-          <label className="block text-gray-400 text-xs mb-1">Pickup point *</label>
-          <div className="relative">
-            <select
-              name="pickup"
-              required
-              value={form.pickup}
-              onChange={handleChange}
-              className="input-dark appearance-none pr-8"
-            >
-              {pickupOptions.map((o) => (
-                <option key={o} value={o}>{o}</option>
-              ))}
-            </select>
-            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-          </div>
+          <label className="block text-gray-400 text-xs mb-1">Drop-off *</label>
+          <Select name="dropoff" value={form.dropoff} onChange={handleChange} options={locationOptions} />
         </div>
       </div>
 
       {/* Date + Time */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-gray-400 text-xs mb-1">Arrival date *</label>
+          <label className="block text-gray-400 text-xs mb-1">Date *</label>
           <input
-            type="date"
-            name="date"
-            required
-            value={form.date}
-            onChange={handleChange}
-            className="input-dark"
-            min={new Date().toISOString().split('T')[0]}
+            type="date" name="date" required value={form.date} onChange={handleChange}
+            className="input-dark" min={new Date().toISOString().split('T')[0]}
           />
         </div>
         <div>
-          <label className="block text-gray-400 text-xs mb-1">Arrival time *</label>
-          <input
-            type="time"
-            name="time"
-            required
-            value={form.time}
-            onChange={handleChange}
-            className="input-dark"
-          />
+          <label className="block text-gray-400 text-xs mb-1">Time *</label>
+          <input type="time" name="time" required value={form.time} onChange={handleChange} className="input-dark" />
         </div>
       </div>
 
       {/* Flight + Passengers */}
-      <div className="grid sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div>
-          <label className="block text-gray-400 text-xs mb-1">Flight number</label>
-          <input
-            name="flight"
-            value={form.flight}
-            onChange={handleChange}
-            className="input-dark"
-            placeholder="e.g. BA304"
-          />
+          <label className="block text-gray-400 text-xs mb-1">Flight no.</label>
+          <input name="flight" value={form.flight} onChange={handleChange} className="input-dark" placeholder="BA304" />
         </div>
         <div>
           <label className="block text-gray-400 text-xs mb-1">Adults *</label>
-          <div className="relative">
-            <select name="passengers" value={form.passengers} onChange={handleChange} className="input-dark appearance-none pr-8">
-              {['1','2','3','4','5','6','7'].map((n) => <option key={n}>{n}</option>)}
-            </select>
-            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-          </div>
+          <Select name="passengers" value={form.passengers} onChange={handleChange} options={['1','2','3','4','5','6','7']} />
         </div>
         <div>
           <label className="block text-gray-400 text-xs mb-1">Children 🧒</label>
-          <div className="relative">
-            <select name="children" value={form.children} onChange={handleChange} className="input-dark appearance-none pr-8">
-              {['0','1','2','3','4','5'].map((n) => <option key={n}>{n}</option>)}
-            </select>
-            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-          </div>
+          <Select name="children" value={form.children} onChange={handleChange} options={['0','1','2','3','4','5']} />
         </div>
       </div>
 
-      {/* Child ages (conditional) */}
       {parseInt(form.children) > 0 && (
         <div>
-          <label className="block text-gray-400 text-xs mb-1">
-            Children&apos;s ages (for free child seats) *
-          </label>
+          <label className="block text-gray-400 text-xs mb-1">Children&apos;s ages (for child seats) *</label>
           <input
-            name="childAges"
-            required
-            value={form.childAges}
-            onChange={handleChange}
-            className="input-dark"
-            placeholder="e.g. 2 years, 5 years"
+            name="childAges" required value={form.childAges} onChange={handleChange}
+            className="input-dark" placeholder="e.g. 2 years, 5 years"
           />
         </div>
       )}
 
-      {/* Notes */}
       <div>
         <label className="block text-gray-400 text-xs mb-1">Special requests (optional)</label>
         <textarea
-          name="notes"
-          rows={2}
-          value={form.notes}
-          onChange={handleChange}
+          name="notes" rows={2} value={form.notes} onChange={handleChange}
           className="input-dark resize-none"
-          placeholder="e.g. large suitcases, wheelchair, special assistance..."
+          placeholder="e.g. large pushchair, skis, wheelchair access..."
         />
       </div>
 
@@ -216,22 +178,22 @@ export default function BookingForm() {
       <div className="bg-gold/10 border border-gold/30 rounded-xl px-4 py-3 flex items-center justify-between">
         <div>
           <span className="text-gray-400 text-xs block">Fixed price (one way)</span>
-          <span className="text-gold font-bold text-lg">{selectedPrice}</span>
+          <span className="text-gold font-bold text-lg">{vehicle === 'tesla' ? '€80' : '€120'}</span>
+          <span className="text-gray-600 text-xs ml-2">CDG → Disney</span>
         </div>
         <div className="text-right">
-          <span className="text-gray-500 text-xs block">Included</span>
+          <span className="text-gray-500 text-xs block">Always included</span>
           <span className="text-white text-xs">Meet &amp; Greet · Child seat · Flight tracking</span>
         </div>
       </div>
 
-      {/* Submit */}
       <button type="submit" className="btn-whatsapp w-full py-4 text-base font-bold">
         <MessageCircle size={20} />
         Check Price &amp; Book via WhatsApp
       </button>
 
       <p className="text-gray-600 text-xs text-center">
-        Your request opens WhatsApp — we confirm in English within minutes.
+        Opens WhatsApp — we confirm in English within minutes.
       </p>
     </form>
   );
