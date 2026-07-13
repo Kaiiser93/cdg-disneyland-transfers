@@ -13,8 +13,8 @@ const locationOptions = [
 ];
 
 const vehicleOptions = [
-  { id: 'tesla', label: '⚡ Tesla Model 3/Y', capacity: 'Up to 4 passengers', price: '€80' },
-  { id: 'van', label: '🚐 Mercedes V-Class', capacity: 'Up to 7 passengers', price: '€120' },
+  { id: 'tesla', label: '⚡ Tesla Model 3/Y', capacity: 'Up to 4 pax · vegan leather', price: '€80' },
+  { id: 'van', label: '🚐 Mercedes Vito', capacity: 'Up to 8 passengers', price: '€120' },
 ];
 
 function Select({ name, value, onChange, options }: {
@@ -54,6 +54,7 @@ export default function BookingForm() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const v = vehicleOptions.find((x) => x.id === vehicle);
+    const vehicleFull = vehicle === 'tesla' ? 'Tesla Model 3/Y (up to 4 pax — 2 large + 2 cabin bags)' : 'Mercedes Vito (up to 8 pax — 6 large suitcases)';
     const hasChildren = parseInt(form.children) > 0;
 
     const lines = [
@@ -67,7 +68,7 @@ export default function BookingForm() {
       form.flight ? `✈️ *Flight:* ${form.flight}` : '',
       `👥 *Passengers:* ${form.passengers} adult(s)${hasChildren ? ` + ${form.children} child(ren)` : ''}`,
       hasChildren && form.childAges ? `🧒 *Children's ages:* ${form.childAges}` : '',
-      `🚐 *Vehicle:* ${v?.label}`,
+      `🚐 *Vehicle:* ${vehicleFull}`,
       form.notes ? `📝 *Notes:* ${form.notes}` : '',
       ``,
       `Please confirm availability and send the Stripe payment link. Thank you!`,

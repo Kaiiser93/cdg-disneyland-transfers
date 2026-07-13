@@ -11,26 +11,26 @@ const routes = [
   { from: 'CDG Airport', tesla: 80, van: 120 },
   { from: 'Orly Airport', tesla: 90, van: 130 },
   { from: 'Paris city centre', tesla: 90, van: 130 },
-  { from: 'Versailles', tesla: 100, van: 145 },
+  { from: 'Versailles', tesla: 140, van: 180 },
   { from: 'Beauvais Airport', tesla: 200, van: 255 },
 ];
 
 const teslaFeatures = [
   'Up to 4 passengers',
-  '3 large suitcases',
+  '2 large suitcases + 2 cabin bags',
   'Electric — zero emissions, silent ride',
+  'Vegan leather interior',
   'On-board Wi-Fi & USB charging',
   'Air conditioning',
-  'Premium leather seats',
 ];
 
 const vanFeatures = [
-  'Up to 7 passengers',
-  '7 large suitcases + pushchair',
-  'Mercedes V-Class or EQV (electric)',
+  'Up to 8 passengers',
+  '6 large suitcases',
+  'Mercedes Vito — spacious & comfortable',
   'Individual captain seats',
-  'Privacy sliding partition',
   'Ideal for families & groups',
+  'Child seats available on request',
 ];
 
 const included = [
@@ -91,7 +91,7 @@ export default function FleetPage() {
                 <span className="text-4xl">🚐</span>
                 <div>
                   <h2 className="text-white font-bold text-xl">Premium Van</h2>
-                  <p className="text-gold text-sm font-medium">Mercedes V-Class / EQV</p>
+                  <p className="text-gold text-sm font-medium">Mercedes Vito</p>
                 </div>
               </div>
               <ul className="space-y-2 mb-6">
@@ -104,7 +104,7 @@ export default function FleetPage() {
               </ul>
               <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
                 <span className="text-gray-400 text-xs block mb-1">CDG → Disneyland from</span>
-                <span className="text-gold font-black text-3xl">€120</span>
+                <span className="text-gold font-black text-3xl">€120 <span className="text-sm font-normal text-gray-400">/ up to 8 pax</span></span>
               </div>
             </div>
           </div>

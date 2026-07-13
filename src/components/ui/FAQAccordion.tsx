@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: 'We have a lot of luggage — pushchair, suitcases, bags. Will it all fit?',
-    a: "If you are travelling with more than 4 passengers or have a large amount of luggage (pushchairs, sport equipment, etc.), we recommend booking the Mercedes V-Class van. It accommodates up to 7 passengers with up to 7 large suitcases and a folded pushchair. If in doubt, mention your luggage in the booking form and we will advise the right vehicle.",
+    a: "If you are travelling with more than 4 passengers or have a large amount of luggage (pushchairs, sport equipment, etc.), we recommend booking the Mercedes Vito van. It accommodates up to 8 passengers with up to 6 large suitcases. If in doubt, mention your luggage in the booking form and we will advise the right vehicle.",
   },
   {
     q: 'How far in advance should I book?',

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { CheckCircle, Star, Shield, Clock, Baby, MapPin } from 'lucide-react';
+import { Star, Shield, Clock, Baby, MapPin } from 'lucide-react';
 import BookingForm from '@/components/ui/BookingForm';
 import CastleIllustration from '@/components/ui/CastleIllustration';
 import Link from 'next/link';
@@ -33,26 +33,6 @@ const trustBadges = [
   },
 ];
 
-const reviews = [
-  {
-    name: 'Sarah T.',
-    location: 'London, UK',
-    text: 'Absolutely faultless service! Driver was waiting with our name on a sign as we came through arrivals. The Tesla was spotless and the car seat for our 18-month-old was already fitted. Magical start to our Disney trip!',
-    stars: 5,
-  },
-  {
-    name: 'James H.',
-    location: 'Manchester, UK',
-    text: 'Our flight from Heathrow was delayed by 2 hours and the driver waited without any fuss or extra charge. Highly recommend for families — the van was huge with plenty of room for all our cases.',
-    stars: 5,
-  },
-  {
-    name: 'Emma R.',
-    location: 'Birmingham, UK',
-    text: 'Booked via WhatsApp and had confirmation within 10 minutes. Friendly, professional and stress-free. Will definitely use again on the way back to CDG.',
-    stars: 5,
-  },
-];
 
 const steps = [
   { step: '01', title: 'Book via WhatsApp', desc: 'Fill in our quick form and we confirm your booking in English within minutes.' },
@@ -106,7 +86,7 @@ export default function HomePage() {
                     <Star key={i} size={12} className="fill-gold text-gold" />
                   ))}
                 </div>
-                <span className="text-gold text-sm font-semibold">4.9/5 · 61 verified reviews</span>
+                <span className="text-gold text-sm font-semibold">5/5 · 61 Google reviews</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
@@ -127,7 +107,7 @@ export default function HomePage() {
                 {[
                   { from: 'CDG → Disneyland', price: 'From €80' },
                   { from: 'Orly → Disneyland', price: 'From €90' },
-                  { from: 'Up to 7 passengers', price: 'From €120 (Van)' },
+                  { from: 'Up to 8 passengers', price: 'From €120 (Van)' },
                 ].map((p) => (
                   <div
                     key={p.from}
@@ -251,36 +231,41 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* REVIEWS */}
-      <section className="py-24 bg-[#0A0E1A]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 rounded-full px-4 py-2 mb-4">
-              <div className="flex gap-0.5">
-                {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-gold text-gold" />)}
-              </div>
-              <span className="text-gold text-sm font-semibold">4.9 / 5 · 61 Google reviews</span>
+      {/* GOOGLE REVIEWS */}
+      <section className="py-20 bg-[#0A0E1A]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 rounded-full px-4 py-2 mb-6">
+            <div className="flex gap-0.5">
+              {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-gold text-gold" />)}
             </div>
-            <h2 className="section-title">What Our Passengers Say</h2>
+            <span className="text-gold text-sm font-semibold">5 / 5 · 61 Google reviews</span>
           </div>
-          <div className="grid sm:grid-cols-3 gap-6">
-            {reviews.map((r) => (
-              <div key={r.name} className="card-dark flex flex-col">
-                <div className="flex gap-1 mb-3">
-                  {[...Array(r.stars)].map((_, i) => (
-                    <Star key={i} size={14} className="fill-gold text-gold" />
-                  ))}
-                </div>
-                <p className="text-gray-300 text-sm leading-relaxed flex-1 italic mb-4">
-                  &ldquo;{r.text}&rdquo;
-                </p>
-                <div>
-                  <span className="text-white text-sm font-semibold">{r.name}</span>
-                  <span className="text-gray-500 text-xs ml-2">{r.location}</span>
-                </div>
+          <h2 className="section-title mb-4">What Our Passengers Say</h2>
+          <p className="text-gray-400 mb-10 max-w-xl mx-auto text-sm">
+            61 verified reviews on Google — from real families who trusted us for their Disney trip.
+            We are a French company based at Roissy-CDG.
+          </p>
+          <a
+            href="https://www.google.com/search?q=Obrigado+Transports+VTC+Roissy+CDG+avis"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-5 bg-[#1A2235] border border-[#263044] hover:border-gold/40 rounded-2xl px-8 py-5 transition-all group w-full sm:w-auto justify-center sm:justify-start"
+          >
+            <svg width="36" height="36" viewBox="0 0 48 48" aria-hidden="true" className="flex-shrink-0">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <div className="text-left">
+              <div className="flex gap-0.5 mb-1">
+                {[...Array(5)].map((_, i) => <Star key={i} size={12} className="fill-gold text-gold" />)}
               </div>
-            ))}
-          </div>
+              <div className="text-white font-bold text-sm">Read our 61 Google reviews</div>
+              <div className="text-gray-400 text-xs mt-0.5">Obrigado Transports · Based at Roissy-CDG, France</div>
+            </div>
+            <span className="text-gold text-lg group-hover:translate-x-1 transition-transform ml-auto hidden sm:block">→</span>
+          </a>
         </div>
       </section>
 
@@ -293,7 +278,7 @@ export default function HomePage() {
             <div className="card-dark border-blue-500/30">
               <div className="text-3xl mb-3">⚡</div>
               <h3 className="text-white font-bold text-lg mb-1">Executive Eco — Tesla Model 3/Y</h3>
-              <p className="text-gray-400 text-sm mb-4">Up to 4 passengers · 3 large suitcases · Electric, silent, zero-emission</p>
+              <p className="text-gray-400 text-sm mb-4">Up to 4 passengers · 2 large + 2 cabin bags · Vegan leather, electric</p>
               <div className="flex items-center justify-between">
                 <span className="text-gold font-bold text-2xl">€80</span>
                 <span className="text-gray-500 text-sm">CDG → Disneyland</span>
@@ -301,8 +286,8 @@ export default function HomePage() {
             </div>
             <div className="card-dark border-gold/30">
               <div className="text-3xl mb-3">🚐</div>
-              <h3 className="text-white font-bold text-lg mb-1">Premium Van — Mercedes V-Class</h3>
-              <p className="text-gray-400 text-sm mb-4">Up to 7 passengers · 7 large suitcases · Perfect for families &amp; groups</p>
+              <h3 className="text-white font-bold text-lg mb-1">Premium Van — Mercedes Vito</h3>
+              <p className="text-gray-400 text-sm mb-4">Up to 8 passengers · 6 large suitcases · Perfect for families &amp; groups</p>
               <div className="flex items-center justify-between">
                 <span className="text-gold font-bold text-2xl">€120</span>
                 <span className="text-gray-500 text-sm">CDG → Disneyland</span>
