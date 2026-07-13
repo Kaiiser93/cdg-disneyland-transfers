@@ -233,39 +233,75 @@ export default function HomePage() {
 
       {/* GOOGLE REVIEWS */}
       <section className="py-20 bg-[#0A0E1A]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 rounded-full px-4 py-2 mb-6">
-            <div className="flex gap-0.5">
-              {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-gold text-gold" />)}
-            </div>
-            <span className="text-gold text-sm font-semibold">5 / 5 · 61 Google reviews</span>
-          </div>
-          <h2 className="section-title mb-4">What Our Passengers Say</h2>
-          <p className="text-gray-400 mb-10 max-w-xl mx-auto text-sm">
-            61 verified reviews on Google — from real families who trusted us for their Disney trip.
-            We are a French company based at Roissy-CDG.
-          </p>
-          <a
-            href="https://www.google.com/search?q=Obrigado+Transports+VTC+Roissy+CDG+avis"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-5 bg-[#1A2235] border border-[#263044] hover:border-gold/40 rounded-2xl px-8 py-5 transition-all group w-full sm:w-auto justify-center sm:justify-start"
-          >
-            <svg width="36" height="36" viewBox="0 0 48 48" aria-hidden="true" className="flex-shrink-0">
-              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-            </svg>
-            <div className="text-left">
-              <div className="flex gap-0.5 mb-1">
-                {[...Array(5)].map((_, i) => <Star key={i} size={12} className="fill-gold text-gold" />)}
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 rounded-full px-4 py-2 mb-6">
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => <Star key={i} size={14} className="fill-gold text-gold" />)}
               </div>
-              <div className="text-white font-bold text-sm">Read our 61 Google reviews</div>
-              <div className="text-gray-400 text-xs mt-0.5">Obrigado Transports · Based at Roissy-CDG, France</div>
+              <span className="text-gold text-sm font-semibold">5 / 5 · 61 Google reviews</span>
             </div>
-            <span className="text-gold text-lg group-hover:translate-x-1 transition-transform ml-auto hidden sm:block">→</span>
-          </a>
+            <h2 className="section-title">What Our Passengers Say</h2>
+          </div>
+
+          {/* Real Google reviews */}
+          <div className="grid sm:grid-cols-2 gap-6 mb-10">
+            {[
+              {
+                name: 'Nermine B.',
+                text: 'We used the company and they went above and beyond to make us happy. They actually went to our Airbnb a few hours early to get our keys because our flight was late. Amazing owner and staff. I highly recommend them.',
+                date: 'June 2025',
+              },
+              {
+                name: 'Larry R.',
+                text: 'Danito, our driver in Paris, was courteous, informative and an all around gentleman. Don\'t hesitate to use his company for rides both long and short. 5 stars.',
+                date: 'September 2024',
+              },
+            ].map((r) => (
+              <div key={r.name} className="card-dark flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true" className="flex-shrink-0">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                  </svg>
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => <Star key={i} size={12} className="fill-gold text-gold" />)}
+                  </div>
+                </div>
+                <p className="text-gray-300 text-sm leading-relaxed flex-1 italic mb-4">
+                  &ldquo;{r.text}&rdquo;
+                </p>
+                <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#263044]">
+                  <span className="text-white text-sm font-semibold">{r.name}</span>
+                  <span className="text-gray-500 text-xs">{r.date} · Google</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* See all reviews CTA */}
+          <div className="text-center">
+            <a
+              href="https://g.page/r/CShsqRpX7Jf2EBM"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-4 bg-[#1A2235] border border-[#263044] hover:border-gold/40 rounded-2xl px-6 py-4 transition-all group"
+            >
+              <svg width="24" height="24" viewBox="0 0 48 48" aria-hidden="true" className="flex-shrink-0">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+              </svg>
+              <div className="text-left">
+                <div className="text-white font-bold text-sm">See all 61 reviews on Google</div>
+                <div className="text-gray-400 text-xs">Obrigado Transports · Roissy-CDG, France</div>
+              </div>
+              <span className="text-gold text-base group-hover:translate-x-1 transition-transform">→</span>
+            </a>
+          </div>
         </div>
       </section>
 
